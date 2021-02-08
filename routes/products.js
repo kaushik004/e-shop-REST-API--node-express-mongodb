@@ -3,9 +3,8 @@ const { Category } = require('../models/category');
 const express = require('express');
 const router = express.Router();
 
-// http://127.0.0.1/api/v1/products
+// getting list of products
 router.get('/', async (req, res) => {
-    
     // 127.0.0.1/api/va1/products/?categories=1234,2345
     let filter = {};
     if(req.query.categories) {
@@ -15,21 +14,23 @@ router.get('/', async (req, res) => {
     const productList = await Product.find(filter).populate('category');
 
     if (!productList) {
-        res.status(500).json({ success: false })
+        return res.status(500).json({ success: false })
     }
     res.send(productList);
 });
 
+// getting a single product
 router.get('/:id', async (req, res) => {
     const product = await Product.findById(req.params.id).populate('category');
 
     if (!product) {
-        res.status(500).json({ success: false })
+        return res.status(500).json({ success: false, message: 'product not found!' })
     }
     res.send(product);
 });
 
-router.post(`/`, async (req, res) => {
+// creating a product
+router.post('/', async (req, res) => {
     const category = await Category.findById(req.body.category);
     if(!category) {
         return res.status(400).send('Invalid category');
@@ -59,13 +60,13 @@ router.post(`/`, async (req, res) => {
     res.send(product);
 });
 
+// updating a product
 router.put('/:id', async (req, res) => {
     const category = await Category.findById(req.body.category);
     if(!category) {
         return res.status(400).send('Invalid category');
     }
     try {
-        
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             {
@@ -93,7 +94,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete(`/:id`, (req, res) => {
+// deleting a product
+router.delete('/:id', (req, res) => {
     Product.findByIdAndRemove(req.params.id).then(product => {
         if(product) {
             return res.status(200).json({ success: true, message: 'the product is deleted!' });
@@ -105,6 +107,7 @@ router.delete(`/:id`, (req, res) => {
     })
 });
 
+// getting total number product
 router.get('/get/count', async (req, res) => {
     const productCount = await Product.countDocuments((count) => count);
 
@@ -114,6 +117,7 @@ router.get('/get/count', async (req, res) => {
     res.send({ productCount: productCount });
 });
 
+// getting featured number of product
 router.get('/get/featured/:count', async (req, res) => {
     const count = req.params.count ? req.params.count : 0
     const products = await Product.find({isFeatured: true}).limit(+count);

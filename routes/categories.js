@@ -2,16 +2,18 @@ const { Category } = require('../models/category');
 const express = require('express');
 const router = express.Router();
 
-router.get(`/`, async (req, res) => {
+// getting list of category
+router.get('/', async (req, res) => {
     const categoryList = await Category.find();
 
     if(!categoryList) {
         res.status(500).json({ success: false });
     }
-    res.send(categoryList);
+    res.status(200).send(categoryList);
 });
 
-router.get(`/:id`, async (req, res) => {
+// getting a single category
+router.get('/:id', async (req, res) => {
     const category = await Category.findById(req.params.id);
 
     if(!category) {
@@ -21,7 +23,8 @@ router.get(`/:id`, async (req, res) => {
     res.status(200).send(category);
 });
 
-router.post(`/`, async (req, res) => {
+// creating a category
+router.post('/', async (req, res) => {
     let category = new Category({
         name: req.body.name,
         icon: req.body.icon,
@@ -36,7 +39,8 @@ router.post(`/`, async (req, res) => {
     res.status(200).send(category);
 });
 
-router.put(`/:id`, async (req, res) => {
+// updating a category
+router.put('/:id', async (req, res) => {
     const category = await Category.findByIdAndUpdate(
         req.params.id,
         {
@@ -48,13 +52,14 @@ router.put(`/:id`, async (req, res) => {
     )
 
     if(!category) {
-        return res.status(500).json({ message: 'category not found!' })
+        return res.status(400).send('category cannot be updated.');
     }
 
     res.status(200).send(category);
 });
 
-router.delete(`/:id`, (req, res) => {
+// deleting a category
+router.delete('/:id', (req, res) => {
     Category.findByIdAndRemove(req.params.id).then(category => {
         if(category) {
             return res.status(200).json({ success: true, message: 'the category is deleted!' });

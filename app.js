@@ -3,6 +3,8 @@ require('dotenv/config');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const authJwt = require('./helpers/jwt');
+const errorHandler = require('./helpers/errorHandler');
 
 // importing routes
 const categoryRoutes = require('./routes/categories');
@@ -34,6 +36,9 @@ app.options('*', cors()); // allowing all other http request from any other orig
 app.use(express.json());
 // Morgan for logging
 app.use(morgan('tiny'));
+// jwt authentication
+app.use(authJwt());
+app.use(errorHandler);
 
 // Routes
 app.use(`${api}/categories`, categoryRoutes);
@@ -41,6 +46,7 @@ app.use(`${api}/products`, productRoutes);
 app.use(`${api}/users`, userRoutes);
 app.use(`${api}/orders`, orderRoutes);
 
+// server
 app.listen(PORT, () => {
     console.log(`Server is running http://127.0.0.1:${PORT}`);
 });

@@ -10,16 +10,16 @@ const categorySchema = mongoose.Schema({
     },
     color: {
         type: String
-    },
-    
+    }  
 });
 
+// creating virtual id same as _id
 categorySchema.virtual('id').get(function() {
     return this._id.toHexString();
 });
 
 categorySchema.set('toJSON', {
     virtuals: true
-})
+});
 
 exports.Category = mongoose.model('Category', categorySchema);
