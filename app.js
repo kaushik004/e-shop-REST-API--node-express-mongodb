@@ -20,7 +20,8 @@ const api = process.env.API_URL;
 // mongodb connection
 mongoose.connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 })
 .then(() => {
     console.log('Database is connected successfully....');
@@ -34,6 +35,7 @@ app.use(cors());
 app.options('*', cors()); // allowing all other http request from any other origin 
 // Body Parser
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 // Morgan for logging
 app.use(morgan('tiny'));
 // jwt authentication
