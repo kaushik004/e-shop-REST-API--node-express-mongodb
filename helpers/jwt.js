@@ -10,6 +10,7 @@ const authJwt = () => {
     }).unless({
         path: [
             // excluding paths which is not required for authentication
+            {url: /\/public\/uploads(.*)/, methods: ['GET', 'OPTION']},
             {url: /\/api\/v1\/products(.*)/, methods: ['GET', 'OPTION']},
             {url: /\/api\/v1\/categories(.*)/, methods: ['GET', 'OPTION']},
             `${api}/users/login`,

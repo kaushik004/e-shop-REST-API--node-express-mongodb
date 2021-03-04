@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     const categoryList = await Category.find();
 
     if(!categoryList) {
-        res.status(500).json({ success: false });
+        return res.status(500).json({ success: false });
     }
     res.status(200).send(categoryList);
 });
@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
     category = await category.save();
     
     if(!category) {
-        return res.status(404).send('the category cannot be created !');
+        return res.status(400).send('the category cannot be created !');
     }
     
     res.status(200).send(category);
@@ -68,7 +68,7 @@ router.delete('/:id', (req, res) => {
         }
     }).catch(err => {
         return res.status(500).json({ success: false, err: err });
-    })
+    });
 });
 
 module.exports = router;

@@ -8,9 +8,9 @@ router.get('/', async (req, res) => {
     const orderList = await Order.find().populate('user', 'name').sort({'dateOrdered': -1});
 
     if(!orderList) {
-        res.status(500).json({ success: false });
+        return res.status(500).json({ success: false });
     }
-    res.send(orderList);
+    res.status(200).send(orderList);
 });
 
 router.get('/:id', async (req, res) => {
@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
     if(!order) {
         res.status(500).json({ success: false });
     }
-    res.send(order);
+    res.status(200).send(order);
 });
 
 // creating a order
@@ -69,7 +69,7 @@ router.post('/', async (req, res) => {
         return res.status(400).send('order cannot be created!');
     }
 
-    res.send(order);
+    res.status(200).send(order);
 });
 
 router.put('/:id', async (req, res) => {
@@ -85,7 +85,7 @@ router.put('/:id', async (req, res) => {
         return res.status(400).send('the order not found!');
     }
 
-    res.send(order);
+    res.status(200).send(order);
 });
 
 // deleting the order
@@ -113,7 +113,7 @@ router.get('/get/totalsales', async (req, res) => {
         return res.status(400).send('The order sales cannot br generated');
     }
 
-    res.send({ totalSales: totalSales.pop().totalsales });
+    res.status(200).send({ totalSales: totalSales.pop().totalsales });
 });
 
 router.get('/get/count', async (req, res) => {
@@ -122,7 +122,7 @@ router.get('/get/count', async (req, res) => {
     if (!orderCount) {
         res.status(500).json({ success: false })
     }
-    res.send({ orderCount: orderCount });
+    res.status(200).send({ orderCount: orderCount });
 });
 
 router.get('/get/userorder/:userId', async (req, res) => {
@@ -140,7 +140,7 @@ router.get('/get/userorder/:userId', async (req, res) => {
         return res.status(500).json({ success: false });
     }
 
-    res.send(userOrderList);
+    res.status(200).send(userOrderList);
 });
 
 module.exports = router;

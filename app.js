@@ -12,7 +12,6 @@ const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const orderRoutes = require('./routes/orders');
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const api = process.env.API_URL;
@@ -40,6 +39,8 @@ app.use(express.urlencoded({extended: true}));
 app.use(morgan('tiny'));
 // jwt authentication
 app.use(authJwt());
+// for static files
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
 app.use(errorHandler);
 
 // Routes
